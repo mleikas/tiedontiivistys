@@ -18,6 +18,7 @@ Tämän tiedosto myös on mahdollista palauttaa alkuperäiseen kokoon.
 ## Aika- ja tilavaativuudet
 
 Huffman aika: O(n log n) | Lempel-Ziv aika O(n)
+
 Huffman tila: O(n) | Lempel-Ziv tila O(n)
 
 ## Lähteet 
