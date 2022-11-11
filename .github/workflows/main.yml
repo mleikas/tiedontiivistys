@@ -5,11 +5,11 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.8
@@ -26,3 +26,5 @@ jobs:
         run: poetry run coverage xml
       - name: Coverage report to Codecov
         run: bash <(curl -s https://codecov.io/bash)
+      - name: Test Pylint coverage
+        run: poetry run pylint src
