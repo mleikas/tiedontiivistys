@@ -126,11 +126,11 @@ def Huffman_Decoding(encoded_data, huffman_tree):
 
 
 """ First Test """
-data = "AAAAAAABCCCCCCDDEEEEE"
-print(data)
-encoding, tree = Huffman_Encoding(data)
-print("Encoded output", encoding)
-print("Decoded Output", Huffman_Decoding(encoding,tree))
+#data = "AAAAAAABCCCCCCDDEEEEE"
+#print(data)
+#encoding, tree = Huffman_Encoding(data)
+#print("Encoded output", encoding)
+#print("Decoded Output", Huffman_Decoding(encoding,tree))
 
 
 """ Second Test """
