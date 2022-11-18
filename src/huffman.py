@@ -1,6 +1,9 @@
 # Algoritmi on tehty tämän pohjalta:
 # https://towardsdatascience.com/huffman-encoding-python-implementation-8448c3654328
 # Huffman Puun Solmu
+"""
+Huffman algoritmi
+"""
 class Solmu:
     """
     Luokka Huffmanin puun solmuille
@@ -21,58 +24,64 @@ class Solmu:
         # puun suunta (0 tai 1)
         self.koodi = ''
 
-""" Apufunktio printtaamaan symbolien koodit menemällä Huffman puun läpi """
-koodit = dict()
+    def __str__(self):
+        return self.__class__.__name__
 
-def Laske_Koodit(solmu, arvo=''):
+    def puu_tekstiksi(self):
+        """ Luokan funktio, joka muuttaa solmut toiseen muotoon """
+
+koodit = {}
+
+def laske_koodit(solmu, arvo=''):
+    """ Apufunktio printtaamaan symbolien koodit menemällä Huffman puun läpi """
     # huffman koodi nykyiselle solmulle
-    uusiArvo = arvo + str(solmu.koodi)
+    uusi_arvo = arvo + str(solmu.koodi)
 
     if solmu.vasen:
-        Laske_Koodit(solmu.vasen, uusiArvo)
+        laske_koodit(solmu.vasen, uusi_arvo)
     if solmu.oikea:
-        Laske_Koodit(solmu.oikea, uusiArvo)
+        laske_koodit(solmu.oikea, uusi_arvo)
 
     if not solmu.vasen and not solmu.oikea:
-        koodit[solmu.symboli] = uusiArvo
+        koodit[solmu.symboli] = uusi_arvo
 
-    return koodit        
+    return koodit
 
-""" Apufunktio laskemaan symbolien todennäköisyydet annetussa datassa"""
-def Laske_Tod(data):
-    symbolit = dict()
+def laske_tod(data):
+    """ Apufunktio laskemaan symbolien todennäköisyydet annetussa datassa"""
+    symbolit = {}
     for elementti in data:
-        if symbolit.get(elementti) == None:
+        if symbolit.get(elementti) is None:
             symbolit[elementti] = 1
-        else: 
+        else:
             symbolit[elementti] += 1
     return symbolit
 
-""" Apufunktio, joka antaa enkoodatun tulostuksen"""
-def Tulos_Koodattu(data, koodaus):
+def tulos_koodattu(data, koodaus):
+    """ Apufunktio, joka antaa enkoodatun tulostuksen"""
     koodaus_tulos = []
-    for c in data:
-        koodaus_tulos.append(koodaus[c])
+    for bitti in data:
+        koodaus_tulos.append(koodaus[bitti])
 
-    string = ''.join([str(item) for item in koodaus_tulos])    
+    string = ''.join([str(item) for item in koodaus_tulos])
     return string
- 
-""" Apufunktio tilan eron laskemiseen pakatun ja ei-pakatun datan välillä """
-def Total_Gain(data, koodaus):
-    ennen_tiivistysta = len(data) * 8
-    jalkeen_tiivistyksen = 0
+
+def total_gain(data, koodaus):
+    """ Apufunktio tilan eron laskemiseen pakatun ja ei-pakatun datan välillä """
+    ennen_pakkausta = len(data) * 8
+    jalkeen_pakkauksen = 0
     symbolit = koodaus.keys()
     for symboli in symbolit:
         count = data.count(symboli)
-        jalkeen_tiivistyksen += count * len(koodaus[symboli])
-    print("Tilan käyttö ennen tiivistystä (biteissä):", ennen_tiivistysta)
-    print("Tilan käyttö tiivistyksen jälkeen(biteissä):",  jalkeen_tiivistyksen)
+        jalkeen_pakkauksen += count * len(koodaus[symboli])
+    print("Tilan käyttö ennen pakkausta (biteissä):", ennen_pakkausta)
+    print("Tilan käyttö pakkauksen jälkeen(biteissä):",  jalkeen_pakkauksen)
 
-def Huffman_Koodaus(data):
+def huffman_koodaus(data):
     """
     Huffman pakkaus
     """
-    symboli_todennakoisyyksilla = Laske_Tod(data)
+    symboli_todennakoisyyksilla = laske_tod(data)
     symbolit = symboli_todennakoisyyksilla.keys()
 
     solmut = []
@@ -88,19 +97,20 @@ def Huffman_Koodaus(data):
         vasen.koodi = 0
         oikea.koodi = 1
 
-        uusiSolmu = Solmu(vasen.tod+oikea.tod, vasen.symboli+oikea.symboli, vasen, oikea)
+        uusi_solmu = Solmu(vasen.tod+oikea.tod, vasen.symboli+oikea.symboli, vasen, oikea)
 
         solmut.remove(vasen)
         solmut.remove(oikea)
-        solmut.append(uusiSolmu)
+        solmut.append(uusi_solmu)
 
-    huffman_koodaus = Laske_Koodit(solmut[0])
-    Total_Gain(data, huffman_koodaus)
-    koodattu_tulos = Tulos_Koodattu(data,huffman_koodaus)
-    return koodattu_tulos, solmut[0]  
+    huffman_koodi = laske_koodit(solmut[0])
+    total_gain(data, huffman_koodi)
+    koodattu_tulos = tulos_koodattu(data,huffman_koodi)
+    solmut = str(solmut)
+    return bytes(koodattu_tulos, encoding='utf8'), bytes(solmut, encoding='utf8')
 
 
-def Huffman_Dekoodaus(koodattu_data, huffman_puu):
+def huffman_dekoodaus(koodattu_data, huffman_puu):
     """
     Huffman purku
     """
@@ -108,15 +118,15 @@ def Huffman_Dekoodaus(koodattu_data, huffman_puu):
     dekoodattu_tulos = []
     for i in koodattu_data:
         if i == '1':
-            huffman_puu = huffman_puu.oikea  
+            huffman_puu = huffman_puu.oikea
         elif i == '0':
             huffman_puu = huffman_puu.vasen
         try:
-            if huffman_puu.vasen.symboli == None and huffman_puu.oikea.symboli == None:
+            if huffman_puu.vasen.symboli is None and huffman_puu.oikea.symboli is None:
                 pass
         except AttributeError:
             dekoodattu_tulos.append(huffman_puu.symboli)
             huffman_puu = puu_head
 
     string = ''.join([str(item) for item in dekoodattu_tulos])
-    return string        
+    return string
