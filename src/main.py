@@ -4,38 +4,67 @@ Pääohjelma
 
 import os
 import huffman
+import lz78
 
 def main():
     """
     Käynnistää algoritmit
     """
-    tekeminen = input("Huffman pakkaaminen: PAINA 1 \nHuffman purkaminen: PAINA 2\n")
-    if str(tekeminen) == "1":
-        polku = input("Anna polku tiedostolle, joka pakataan: ")
-        with open(polku, "r", encoding="utf-8") as tekstitiedosto:
-            data = tekstitiedosto.read()
+    while True:
+        tekeminen = input("Huffman pakkaaminen: PAINA 1 \n"
+        "Huffman purkaminen: PAINA 2\nLZ78 pakkaaminen PAINA 3"
+        "\nLZ78 purkaminen PAINA 4\nOhjelma kiinni PAINA JOTAIN MUUTA\n")
+        if str(tekeminen) == "1":
+            polku = input("Anna polku tiedostolle, joka pakataan: ")
+            with open(polku, "r", encoding="utf-8") as tekstitiedosto:
+                data = tekstitiedosto.read()
 
-        binaarikoodi, puu = huffman.huffman_koodaus(data)
-        polku_huffman_tiedosto = f"{os.path.basename(os.path.normpath(polku))}.txt"
+            binaarikoodi, puu = huffman.huffman_koodaus(data)
+            polku_huffman_tiedosto = \
+                f"{os.path.basename(os.path.normpath(polku))}_pakattu-huffman.txt"
 
-        with open(polku_huffman_tiedosto, "wb") as binaaritiedosto:
-            binaaritiedosto.write(puu)
-            binaaritiedosto.write(binaarikoodi)
+            with open(polku_huffman_tiedosto, "wb") as binaaritiedosto:
+                binaaritiedosto.write(puu)
+                binaaritiedosto.write(binaarikoodi)
+            alkuperainen_koko = os.path.getsize(polku)
+            tulostuksen_koko = os.path.getsize(polku_huffman_tiedosto)
+            print(f"Koko alussa: {alkuperainen_koko}\
+    (biteissä)\nKoko lopussa: {tulostuksen_koko} (biteissä)")
 
-        print(f"Pakattu tiedosto on polussa: {polku_huffman_tiedosto}")
+            print(f"Pakattu tiedosto on polussa: {polku}")
 
-    elif str(tekeminen) == "2":
-        polku = input("Anna polku tiedostolle, joka puretaan: ")
-        with open(polku, "rb") as koodattutiedosto:
-            data = koodattutiedosto.read()
-        puu = "Ei vielä mikään"
-        purettu = huffman.huffman_dekoodaus(data, puu)
-        polku_huffman_purettu = f"{os.path.basename(os.path.normpath(polku))}.txt"
-        with open(polku_huffman_purettu, "wb") as tekstitiedosto:
-            tekstitiedosto.write(purettu)
+        elif str(tekeminen) == "2":
+            polku = input("Anna polku tiedostolle, joka puretaan: ")
+            with open(polku, "rb") as koodattutiedosto:
+                data = koodattutiedosto.read()
+            purettu = huffman.huffman_dekoodaus(data)
+            polku_huffman_purettu = \
+                f"{os.path.basename(os.path.normpath(polku))}_purettu-huffman.txt"
 
-    else:
-        main()
+            with open(polku_huffman_purettu, "w", encoding="utf-8") as tekstitiedosto:
+                tekstitiedosto.write(purettu)
+
+            print(f"Purettu tiedosto on polussa: {polku}")
+
+        elif str(tekeminen) == "3":
+            polku = input("Anna polku tiedostolle, joka pakataan: ")
+            tulostuspolku = f"{os.path.basename(os.path.normpath(polku))}_pakattu-lz.txt"
+            alkuperainen_koko = os.path.getsize(polku)
+
+            lz78.lz_koodaus(polku, tulostuspolku)
+            tulostuksen_koko = os.path.getsize(tulostuspolku)
+            print(f"Koko alussa: {alkuperainen_koko} (biteissä)\n",
+            "Koko lopussa: {tulostuksen_koko} (biteissä)")
+            print(f"Pakattu tiedosto on polussa: {polku}")
+
+        elif str(tekeminen) == "4":
+            polku = input("Anna polku tiedostolle, joka pakataan: ")
+            tulostuspolku = f"{os.path.basename(os.path.normpath(polku))}_purettu-lz.txt"
+            lz78.lz_dekoodaus(polku)
+
+            print(f"Purettu tiedosto on polussa: {polku}")
+        else:
+            break
 
 if __name__ == "__main__":
     main()

@@ -2,7 +2,7 @@
 
 ## Mitä olen tehnyt tällä viikolla?
 Minulla ei ollut tällä viikolla niin paljoa aikaa, mutta
-sain tehtyä pakatun tiedoston ja myös aloitin dekoodauksen Huffmanille
+sain tehtyä pakatun tiedoston ja myös aloitin dekoodauksen Huffmanille.
 
 ## Käytetty aika viikolla
 8h

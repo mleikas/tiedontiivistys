@@ -3,6 +3,8 @@ import huffman
 
 
 class TestHuffman(unittest.TestCase):
-    
-    def test_toimiiko(self):
-        self.assertEqual(0,0)
+    def setUp(self):
+        pass
+    def test_huffman_pakkaus_biteiksi(self):
+        binaarikoodi, puu = huffman.huffman_koodaus("ABC")
+        self.assertEqual(binaarikoodi,b"01001")

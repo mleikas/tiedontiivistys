@@ -1,9 +1,7 @@
-# Algoritmi on tehty tämän pohjalta:
-# https://towardsdatascience.com/huffman-encoding-python-implementation-8448c3654328
-# Huffman Puun Solmu
 """
 Huffman algoritmi
 """
+puun_solmut = []
 class Solmu:
     """
     Luokka Huffmanin puun solmuille
@@ -23,12 +21,51 @@ class Solmu:
 
         # puun suunta (0 tai 1)
         self.koodi = ''
+        self.osoitin = 0
 
     def __str__(self):
         return self.__class__.__name__
+    def hae_osoitin(self):
+        """ Apufunktio, joka tuo osoittimen arvon """
+        return self.osoitin
+    def lisaa_osoittimeen(self):
+        """ Apufunktio, joka nostaa osoitinta yhdellä """
+        self.osoitin+=1
 
-    def puu_tekstiksi(self):
-        """ Luokan funktio, joka muuttaa solmut toiseen muotoon """
+    def tavuista_puuksi(self,data):
+        """ Apufunktio, jolla tavuista saadaan puu """
+        if data[Solmu.hae_osoitin(self)] == "1":
+            Solmu.lisaa_osoittimeen(self)
+            uusi_solmu = Solmu(0, data[Solmu.hae_osoitin(self)])
+            puun_solmut.append(uusi_solmu)
+            return uusi_solmu
+
+        Solmu.lisaa_osoittimeen(self)
+        vasen_puoli = Solmu.tavuista_puuksi(self,data)
+
+        Solmu.lisaa_osoittimeen(self)
+        oikea_puoli = Solmu.tavuista_puuksi(self,data)
+
+        uusi_solmu = Solmu(0, "0", vasen_puoli, oikea_puoli)
+        puun_solmut.append(uusi_solmu)
+        return uusi_solmu
+
+
+puu_bytes = []
+def puu_tavuiksi(solmussa):
+    """ Luokan funktio, joka muuttaa solmut toiseen tavuiksi """
+
+    if solmussa.oikea is None and solmussa.vasen is None:
+        puu_bytes.append(1)
+        puu_bytes.append(solmussa.symboli)
+    else:
+        puu_bytes.append(0)
+        puu_tavuiksi(solmussa.vasen)
+        puu_tavuiksi(solmussa.oikea)
+
+    puu_tavuina = ''.join([str(byte) for byte in puu_bytes]) + "_"
+
+    return bytes(puu_tavuina, 'utf-8')
 
 koodit = {}
 
@@ -66,16 +103,6 @@ def tulos_koodattu(data, koodaus):
     string = ''.join([str(item) for item in koodaus_tulos])
     return string
 
-def total_gain(data, koodaus):
-    """ Apufunktio tilan eron laskemiseen pakatun ja ei-pakatun datan välillä """
-    ennen_pakkausta = len(data) * 8
-    jalkeen_pakkauksen = 0
-    symbolit = koodaus.keys()
-    for symboli in symbolit:
-        count = data.count(symboli)
-        jalkeen_pakkauksen += count * len(koodaus[symboli])
-    print("Tilan käyttö ennen pakkausta (biteissä):", ennen_pakkausta)
-    print("Tilan käyttö pakkauksen jälkeen(biteissä):",  jalkeen_pakkauksen)
 
 def huffman_koodaus(data):
     """
@@ -104,19 +131,23 @@ def huffman_koodaus(data):
         solmut.append(uusi_solmu)
 
     huffman_koodi = laske_koodit(solmut[0])
-    total_gain(data, huffman_koodi)
     koodattu_tulos = tulos_koodattu(data,huffman_koodi)
-    solmut = str(solmut)
-    return bytes(koodattu_tulos, encoding='utf8'), bytes(solmut, encoding='utf8')
+    pakattu_puu = puu_tavuiksi(solmut[0])
+    return bytes(koodattu_tulos, encoding='utf-8'), pakattu_puu
 
 
-def huffman_dekoodaus(koodattu_data, huffman_puu):
+def huffman_dekoodaus(koodattu_data):
     """
     Huffman purku
     """
+    koodattu_data=koodattu_data.decode('utf-8','strict')
+    indeksi = koodattu_data.index("_",0)
+    teksti = koodattu_data[indeksi+1:]
+    puu_tavuina = koodattu_data[:indeksi]
+    huffman_puu = Solmu.tavuista_puuksi(Solmu(0,"0"), puu_tavuina)
     puu_head = huffman_puu
     dekoodattu_tulos = []
-    for i in koodattu_data:
+    for i in teksti:
         if i == '1':
             huffman_puu = huffman_puu.oikea
         elif i == '0':
@@ -128,5 +159,5 @@ def huffman_dekoodaus(koodattu_data, huffman_puu):
             dekoodattu_tulos.append(huffman_puu.symboli)
             huffman_puu = puu_head
 
-    string = ''.join([str(item) for item in dekoodattu_tulos])
-    return string
+    tulos = ''.join([str(item) for item in dekoodattu_tulos])
+    return tulos
