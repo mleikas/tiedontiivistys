@@ -175,9 +175,7 @@ def huffman_dekoodaus(koodattu_data):
     poistuvat = buffer_bitit + len(lopputeksti)
     ilman_buf_bitteja = bitit[:-poistuvat]
     valmiit_bitit = ilman_buf_bitteja + lopputeksti
-    print(lopputeksti)
 
-        
     huffman_puu = Solmu.tavuista_puuksi(Solmu(0,"0"), puu_tavuina)
     puun_eka = huffman_puu
     dekoodattu_tulos = []
