@@ -1,6 +1,7 @@
 """
 Huffman algoritmi
 """
+
 puun_solmut = []
 class Solmu:
     """
@@ -23,8 +24,6 @@ class Solmu:
         self.koodi = ''
         self.osoitin = 0
 
-    def __str__(self):
-        return self.__class__.__name__
     def hae_osoitin(self):
         """ Apufunktio, joka tuo osoittimen arvon """
         return self.osoitin
@@ -133,21 +132,56 @@ def huffman_koodaus(data):
     huffman_koodi = laske_koodit(solmut[0])
     koodattu_tulos = tulos_koodattu(data,huffman_koodi)
     pakattu_puu = puu_tavuiksi(solmut[0])
-    return bytes(koodattu_tulos, encoding='utf-8'), pakattu_puu
+    tulos_byteina = bititbyteiksi(koodattu_tulos)
 
+    return bytes(tulos_byteina), pakattu_puu
+
+def bititbyteiksi(koodattu_tulos):
+    """
+    Funktio bittien muuttamiseen byteiksi
+    """
+    bytelista = bytearray()
+    bufferbitit = 8-(len(koodattu_tulos)%8)
+    for i in range(0,len(koodattu_tulos),8):
+        bytelista.append(int(koodattu_tulos[i:i+8], 2))
+    bytelista.insert(0, bufferbitit)
+    return bytelista
 
 def huffman_dekoodaus(koodattu_data):
     """
     Huffman purku
     """
-    koodattu_data=koodattu_data.decode('utf-8','strict')
-    indeksi = koodattu_data.index("_",0)
-    teksti = koodattu_data[indeksi+1:]
-    puu_tavuina = koodattu_data[:indeksi]
+    indeksi = 0
+    puu_tavuina = ""
+    for i in koodattu_data:
+        i = koodattu_data[indeksi:indeksi+1].decode('utf-8')
+        indeksi += 1
+        if i == "_":
+            break
+        puu_tavuina += i
+    tavut = koodattu_data[indeksi:]
+    lista = []
+    bitit = ''.join(format(tavu, '08b') for tavu in tavut[1:])
+    buffer_bitit = tavut[0]
+    indeksi = buffer_bitit
+    while indeksi > 0:
+        lista.append(bitit[-indeksi])
+        indeksi -= 1
+    lopputeksti = ''.join(lista)
+    for bitti in lopputeksti:
+        if bitti == '1':
+            lopputeksti = lopputeksti[lopputeksti.index(bitti):]
+            break
+    poistuvat = buffer_bitit + len(lopputeksti)
+    ilman_buf_bitteja = bitit[:-poistuvat]
+    valmiit_bitit = ilman_buf_bitteja + lopputeksti
+    print(lopputeksti)
+
+        
     huffman_puu = Solmu.tavuista_puuksi(Solmu(0,"0"), puu_tavuina)
-    puu_head = huffman_puu
+    puun_eka = huffman_puu
     dekoodattu_tulos = []
-    for i in teksti:
+    for i in valmiit_bitit:
         if i == '1':
             huffman_puu = huffman_puu.oikea
         elif i == '0':
@@ -157,7 +191,7 @@ def huffman_dekoodaus(koodattu_data):
                 pass
         except AttributeError:
             dekoodattu_tulos.append(huffman_puu.symboli)
-            huffman_puu = puu_head
+            huffman_puu = puun_eka
 
     tulos = ''.join([str(item) for item in dekoodattu_tulos])
     return tulos

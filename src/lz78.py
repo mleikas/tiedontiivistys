@@ -2,12 +2,14 @@
 LZ78 algoritmi
 """
 import codecs
+
+
 def lz_koodaus(data, tulostus):
     """
     lz78 pakkausalgoritmi
     """
     sanakirja = {}
-    osoitin = 1
+    position = 1
     buf = ""
 
     datatiedosto = codecs.open(data, encoding='utf-8', mode='r')
@@ -19,16 +21,16 @@ def lz_koodaus(data, tulostus):
         seuraava = datatiedosto.read(1)
         buf += seuraava
         if buf not in sanakirja:
-            sanakirja[buf] = osoitin
-            osoitin += 1
+            sanakirja[buf] = position
+            position += 1
             if len(buf) == 1:
                 kirjoita_tiedostoon(0, buf)
             elif len(buf) == 0:
                 kirjoita_tiedostoon(0, '')
             else:
                 kirjain = buf[:-1]
-                kohta = sanakirja[kirjain]
-                kirjoita_tiedostoon(kohta, buf[-1])
+                pos = sanakirja[kirjain]
+                kirjoita_tiedostoon(pos, buf[-1])
             buf = ""
 
         if seuraava is None or len(seuraava) == 0:
@@ -59,6 +61,6 @@ def lz_dekoodaus(data):
     for i in lista:
         string += i
 
-    tulostus = codecs.open(str(data) + "_purettu78", encoding='utf-8', mode='w')
+    tulostus = codecs.open(str(data) + "_purettu-lz.txt", encoding='utf-8', mode='w')
 
     tulostus.write(string)
