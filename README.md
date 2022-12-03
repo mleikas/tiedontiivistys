@@ -7,7 +7,7 @@
 
 [Toteutusraportti](https://github.com/mleikas/tiedontiivistys/blob/main/dokumentaatio/toteutusraportti.md)
 
-[Käyttöohje]()
+[Käyttöohje](https://github.com/mleikas/tiedontiivistys/blob/main/dokumentaatio/kayttoohje.md)
 
 ## Viikkoraportit
 [Viikko 1](https://github.com/mleikas/tiedontiivistys/blob/main/dokumentaatio/viikkoraportit/Viikko1.md)
