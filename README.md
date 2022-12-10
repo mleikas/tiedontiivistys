@@ -20,5 +20,6 @@
 
 [Viikko 5](https://github.com/mleikas/tiedontiivistys/blob/main/dokumentaatio/viikkoraportit/Viikko5.md)
 
+[Viikko 6](https://github.com/mleikas/tiedontiivistys/blob/main/dokumentaatio/viikkoraportit/Viikko6.md)
 ## Codecov
 [![codecov](https://codecov.io/gh/mleikas/tiedontiivistys/branch/main/graph/badge.svg?token=ZHJ6UHSZYW)](https://codecov.io/gh/mleikas/tiedontiivistys)
