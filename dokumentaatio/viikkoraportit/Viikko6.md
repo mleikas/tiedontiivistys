@@ -19,4 +19,4 @@ Vieläkin aina joillain tekstitiedostoilla Huffman pakkaus/purku aiheuttaa pari 
 Onko muuten mitään muuta, mitä kannattaisi verrata, kuin koko ja aika?
 
 ## Mitä teen seuraavaksi?
-UI:n hiominen, dokumentaatio ja yritän vielä korjata Huffman algoritmiä
+UI:n hiominen, dokumentaatio, testikattavuus 100% ja yritän vielä korjata Huffman algoritmiä
