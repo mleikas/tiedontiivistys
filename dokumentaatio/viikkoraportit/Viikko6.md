@@ -2,7 +2,7 @@
 
 ## Mitä olen tehnyt tällä viikolla?
 Suurin osa ajasta meni viime kerran bugin korjailuun, jossa en päässyt juurikaan pidemmälle.
-Tein koodin kommenteista selvempiä.
+Tein koodin kommenteista selvempiä ja korjasin kaikki pylint virheet, joten koodi on nyt pylintin mukaan 10/10.
 Tein myös empiiristä testausta (eli vertailen algoritmejä) ja tämän myötä jatkoin myös dokumentaatiota.
 
 ## Käytetty aika viikolla
