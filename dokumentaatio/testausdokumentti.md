@@ -1,4 +1,8 @@
 # Testausdokumentti
+
+## Manuaalinen testaaminen
+Käyttöliittymä on testattu manuaalisesti, jotta milläkään syötteellä ohjelma ei kaadu. Ohjelmaa testattu Fuksiläppärillä eli Linux systeemillä.
+
 ## Yksikkötestaus
 Pytestiä käyttämällä testataan ohjelman toimintaa.
 
@@ -26,6 +30,7 @@ poetry run invoke test
 ## Testikattavuus
 ![Testikattavuuden kuva](https://github.com/mleikas/tiedontiivistys/blob/main/dokumentaatio/coverage_raportti.png)
 
+Puuttuva prosentti johtuu Huffman purussa tapahtuvasta elif lauseesta, jota ei käydä testitiedostossa läpi.
 
 ## Empiirinen testaus
 ### Huffman algoritmin ja LZ78 algoritmin pakatun tiedoston koon vertailu alkuperäiseen ja toisiinsa

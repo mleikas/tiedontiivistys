@@ -96,16 +96,11 @@ def laske_koodit(solmu, arvo=''):
     Return:
     koodit: koodattu tulos binäärinä
     """
-    uusi_arvo = arvo + str(solmu.koodi)
-
-    if solmu.vasen:
-        laske_koodit(solmu.vasen, uusi_arvo)
-    if solmu.oikea:
-        laske_koodit(solmu.oikea, uusi_arvo)
-
-    if not solmu.vasen and not solmu.oikea:
-        koodit[solmu.symboli] = uusi_arvo
-
+    if solmu.vasen is None and solmu.oikea is None:
+        koodit[solmu.symboli] = arvo
+    else:
+        laske_koodit(solmu.vasen, arvo + '0')
+        laske_koodit(solmu.oikea, arvo + '1')
     return koodit
 
 def laske_tod(data):
@@ -194,11 +189,12 @@ def bititbyteiksi(koodattu_tulos):
     Return:
     bytelista: bitit muutettuina tavuiksi
     """
-    bytelista = bytearray()
-    bufferbitit = 8-(len(koodattu_tulos)%8)
+    bytelista = []
+
+    bufferbitit = (8-len(koodattu_tulos))%8
     for i in range(0,len(koodattu_tulos),8):
         bytelista.append(int(koodattu_tulos[i:i+8], 2))
-    bytelista.insert(0, bufferbitit)
+    bytelista.insert(0,bufferbitit)
     return bytelista
 
 def huffman_dekoodaus(koodattu_data):
@@ -258,6 +254,7 @@ def data_biteiksi(koodattu_data):
     while indeksi > 0:
         lista.append(bitit[-indeksi])
         indeksi -= 1
+
     lopputeksti = ''.join(lista)
     for bitti in lopputeksti:
         if bitti == '1':
